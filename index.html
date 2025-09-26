@@ -1,229 +1,985 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>我的个人主页</title>
+  <meta name="description" content="Xie Xudong - Ph.D. Student at Institute of Software, Chinese Academy of Sciences. Research in Database Systems, LLM4DB, and Software Quality Assurance.">
+  <meta name="keywords" content="Xie Xudong, PhD, Database Systems, LLM4DB, Software Engineering, ISCAS">
+  <meta name="author" content="Xie Xudong">
+  <title>Xie Xudong | Ph.D. Student, ISCAS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #ffffff;
-      --text: #333333;
-      --card-bg: #f8f9fa;
-      --border: #e0e0e0;
-      --primary: #4361ee;
-      --hover: #3a56d4;
-    }
-
-    .dark {
-      --bg: #121212;
-      --text: #f0f0f0;
-      --card-bg: #1e1e1e;
-      --border: #333333;
-    }
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
-
     body {
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      padding: 20px;
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.7;
+      color: #1a202c;
+      background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+      min-height: 100vh;
     }
 
+    /* Flex container for sidebar + main */
     .container {
-      max-width: 900px;
+      display: flex;
+      min-height: 100vh;
+      max-width: 1400px;
       margin: 0 auto;
+      background-color: transparent;
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      min-width: 220px;
+      padding: 2rem 1.5rem;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      height: fit-content;
+      position: sticky;
+      top: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .sidebar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav li {
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar nav a {
+      text-decoration: none;
+      color: #4a5568;
+      font-size: 0.95rem;
+      padding: 0.75rem 1rem;
+      display: block;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sidebar nav a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .sidebar nav a:hover::before {
+      left: 100%;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      color: #3b82f6;
+      background-color: rgba(59, 130, 246, 0.08);
+      font-weight: 600;
+      transform: translateX(4px);
+    }
+
+    /* Main content */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      padding: 0;
     }
 
     header {
-      text-align: center;
-      margin-bottom: 40px;
-      padding-top: 20px;
+      position: relative;
+      text-align: left;
+      margin-bottom: 3rem;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    header:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .lang-toggle {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .lang-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .avatar {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1.5rem;
+      border: 4px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .avatar:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
     }
 
     h1 {
       font-size: 2.5rem;
-      margin-bottom: 10px;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .subtitle {
-      color: var(--primary);
-      margin-bottom: 20px;
+      color: #4a5568;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin: 0 0 1.5rem;
+      font-weight: 400;
     }
 
-    .avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 15px;
-      border: 3px solid var(--primary);
-    }
-
-    .section {
-      margin-bottom: 40px;
-    }
-
-    h2 {
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--primary);
-      display: inline-block;
-    }
-
-    .skills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .skill {
-      background: var(--card-bg);
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      font-size: 0.95rem;
-    }
-
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .project-card {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-    }
-
-    .project-card h3 {
-      margin-bottom: 10px;
-      color: var(--primary);
-    }
-
-    .contact-links a {
-      display: inline-block;
-      margin: 5px 10px;
-      color: var(--text);
+    .subtitle a {
+      color: #3b82f6;
       text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+    
+    .subtitle a:hover {
+      border-bottom-color: #3b82f6;
+    }
+
+    .contact-info {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+      font-size: 1rem;
+    }
+
+    .contact-info span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #4a5568;
+      padding: 0.5rem 1rem;
+      background: rgba(59, 130, 246, 0.05);
+      border-radius: 25px;
+      transition: all 0.3s ease;
       font-weight: 500;
     }
 
-    .contact-links a:hover {
-      color: var(--hover);
-      text-decoration: underline;
+    .contact-info span:hover {
+      background: rgba(59, 130, 246, 0.1);
+      transform: translateY(-2px);
     }
 
-    .theme-toggle {
+    .contact-info a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .contact-info a:hover {
+      color: #2563eb;
+    }
+
+    section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    section:hover::before {
+      opacity: 1;
+    }
+
+    section:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+      color: #1a202c;
+      font-weight: 700;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 2px;
+    }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    li {
+      margin-bottom: 0.75rem;
+      line-height: 1.7;
+    }
+
+    .project-title {
+      font-weight: 700;
+      margin: 1.5rem 0 0.75rem;
+      color: #3b82f6;
+      font-size: 1.25rem;
+      position: relative;
+      padding-left: 1rem;
+    }
+
+    .project-title::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 2px;
+    }
+
+    .pub-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: rgba(59, 130, 246, 0.02);
+      border-radius: 15px;
+      border: 1px solid rgba(59, 130, 246, 0.1);
+    }
+
+    .pub-section h3 {
+      font-size: 1.3rem;
+      margin: 0 0 1rem;
+      color: #374151;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pub-section h3::before {
+      content: '📄';
+      font-size: 1.1rem;
+    }
+
+    /* Publication and project enhancements */
+    .pub-section ol li {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 1.2rem;
+      border-radius: 12px;
+      border-left: 4px solid #3b82f6;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .pub-section ol li:hover {
+      background: rgba(255, 255, 255, 0.95);
+      transform: translateX(4px);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
+    }
+
+    .pub-section ol li strong {
+      color: #1e40af;
+    }
+
+    .pub-section ol li em {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 600;
+      font-style: normal;
+    }
+
+    /* Project descriptions */
+    .project-title + p {
+      background: rgba(255, 255, 255, 0.6);
+      padding: 1.2rem;
+      border-radius: 12px;
+      border-left: 4px solid #8b5cf6;
+      margin-top: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .project-title + p:hover {
+      background: rgba(255, 255, 255, 0.8);
+      transform: translateX(4px);
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+    }
+
+    /* Skills enhancement */
+    #skills p {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 1.5rem;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      border: 2px solid rgba(59, 130, 246, 0.1);
+    }
+
+    /* Education and research list enhancements */
+    #education ul li, #research ul li {
+      background: rgba(255, 255, 255, 0.6);
+      padding: 1rem 1.2rem;
+      border-radius: 10px;
+      border-left: 3px solid #10b981;
+      transition: all 0.3s ease;
+    }
+
+    #education ul li:hover, #research ul li:hover {
+      background: rgba(255, 255, 255, 0.8);
+      transform: translateX(4px);
+      box-shadow: 0 3px 15px rgba(16, 185, 129, 0.1);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 2rem;
+      color: #6b7280;
+      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Enhanced responsive design */
+    @media (max-width: 1200px) {
+      .container {
+        max-width: 1200px;
+        padding: 1.5rem;
+        gap: 1.5rem;
+      }
+      .sidebar {
+        width: 200px;
+        min-width: 200px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+      }
+      
+      .sidebar {
+        width: 100%;
+        min-width: auto;
+        position: static;
+        padding: 1.5rem;
+      }
+      
+      .sidebar nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      
+      .sidebar nav li {
+        margin-bottom: 0;
+      }
+      
+      .sidebar nav a {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+      
+      header {
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+      
+      .lang-toggle {
+        position: static;
+        margin-bottom: 1rem;
+        align-self: flex-start;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+      
+      .avatar {
+        width: 110px;
+        height: 110px;
+      }
+      
+      section {
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .contact-info {
+        gap: 1rem;
+      }
+      
+      .contact-info span {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.95rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 0.5rem;
+      }
+      
+      header {
+        padding: 1.5rem;
+      }
+      
+      section {
+        padding: 1.5rem;
+      }
+      
+      h1 {
+        font-size: 1.75rem;
+      }
+      
+      h2 {
+        font-size: 1.3rem;
+      }
+      
+      .contact-info {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .contact-info span {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+
+    /* Smooth scroll and animations */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Loading animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container > * {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .main-content section:nth-child(2) { animation-delay: 0.1s; }
+    .main-content section:nth-child(3) { animation-delay: 0.2s; }
+    .main-content section:nth-child(4) { animation-delay: 0.3s; }
+    .main-content section:nth-child(5) { animation-delay: 0.4s; }
+    .main-content section:nth-child(6) { animation-delay: 0.5s; }
+    .main-content section:nth-child(7) { animation-delay: 0.6s; }
+
+    /* Accessibility improvements */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Focus styles for better keyboard navigation */
+    .sidebar nav a:focus,
+    .lang-toggle:focus,
+    .contact-info a:focus {
+      outline: 3px solid #3b82f6;
+      outline-offset: 2px;
+      border-radius: 8px;
+    }
+
+    /* Reading Progress Bar */
+    .progress-bar {
       position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      width: 40px;
-      height: 40px;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+      z-index: 9999;
+      transition: width 0.3s ease;
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
       border-radius: 50%;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+      transition: all 0.3s ease;
+      opacity: 0;
+      visibility: hidden;
+      z-index: 1000;
     }
 
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      color: #777;
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .back-to-top:active {
+      transform: translateY(-2px);
+    }
+
+    /* Ripple effect */
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple 600ms linear;
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Print styles */
+    @media print {
+      .sidebar { display: none; }
+      .lang-toggle { display: none; }
+      .back-to-top { display: none; }
+      .container { flex-direction: column; }
+      section { box-shadow: none; border: 1px solid #ccc; }
     }
   </style>
 </head>
 <body>
-  <div class="theme-toggle" id="themeToggle">🌙</div>
-
   <div class="container">
-    <header>
-      <!-- 替换为你自己的头像 URL（可选） -->
-      <img src="https://via.placeholder.com/120" alt="头像" class="avatar" />
-      <h1>谢旭东</h1>
-      <p class="subtitle">前端开发者 | 开源爱好者</p>
-      <p>热爱代码、设计与开源，致力于构建优雅的 Web 体验。</p>
-    </header>
+    <div class="sidebar" id="sidebar">
+      <nav>
+        <ul>
+          <li><a href="#about" id="nav-about">About Me</a></li>
+          <li><a href="#education" id="nav-education">Education</a></li>
+          <li><a href="#research" id="nav-research">Research</a></li>
+          <li><a href="#publications" id="nav-publications">Publications</a></li>
+          <li><a href="#projects" id="nav-projects">Projects</a></li>
+          <li><a href="#skills" id="nav-skills">Skills</a></li>
+        </ul>
+      </nav>
+    </div>
 
-    <section class="section">
-      <h2>🛠️ 技能</h2>
-      <div class="skills">
-        <span class="skill">HTML/CSS</span>
-        <span class="skill">JavaScript</span>
-        <span class="skill">TypeScript</span>
-        <span class="skill">React</span>
-        <span class="skill">Vue</span>
-        <span class="skill">Node.js</span>
-        <span class="skill">Git</span>
-        <span class="skill">GitHub</span>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>🚀 项目</h2>
-      <div class="projects">
-        <div class="project-card">
-          <h3>个人博客系统</h3>
-          <p>基于 React + Markdown 的静态博客，支持暗色主题。</p>
-          <a href="https://github.com/your-username/blog" target="_blank">GitHub</a>
+    <div class="main-content">
+      <header id="top">
+        <button class="lang-toggle" id="langToggle" aria-label="Switch language">中文</button>
+        <img src="./avatar.jpg" alt="Xie Xudong" class="avatar" id="avatar">
+        <h1 id="name">Xie Xudong</h1>
+        <p class="subtitle" id="title">
+          Ph.D. Student (2023), 
+          <a href="http://www.tcse.cn/" target="_blank" rel="noopener">Technology Center of Software Engineering</a>, 
+          Institute of Software, Chinese Academy of Sciences
+        </p>
+        <div class="contact-info">
+          <span>📧 <span id="email">xiexudong23@otcaix.iscas.ac.cn</span></span>
+          <span>🐙 <a href="https://github.com/xxd-pwn" target="_blank" rel="noopener" id="github">GitHub</a></span>
+          <span>📚 <a href="https://scholar.google.com/citations?view_op=list_works&hl=en&user=bpoixMgAAAAJ" target="_blank" rel="noopener" id="scholar">Google Scholar</a></span>
         </div>
-        <div class="project-card">
-          <h3>任务管理工具</h3>
-          <p>使用 Vue 3 和 localStorage 构建的轻量级任务管理器。</p>
-          <a href="https://github.com/your-username/todo-app" target="_blank">GitHub</a>
+      </header>
+
+      <section id="about">
+        <h2 id="about-title">About Me</h2>
+        <p id="about-text">
+          I am a Ph.D. student at the Technology Center of Software Engineering, Institute of Software, Chinese Academy of Sciences, advised by 
+          <a href="https://wsdou.github.io" target="_blank" rel="noopener">Prof. Wensheng Dou</a>. 
+          My research lies at the intersection of database systems and large language models, with a focus on intelligent database systems (LLM4DB) and quality assurance for foundational software.
+        </p>
+      </section>
+
+      <section id="education">
+        <h2 id="education-title">Education</h2>
+        <ul>
+          <li id="edu-phd">Institute of Software, Chinese Academy of Sciences — Ph.D. in Software Engineering (2023–Present)</li>
+          <li id="edu-bachelor">College of Intelligence and Computing, Tianjin University — B.E. in Software Engineering (2019–2023)</li>
+        </ul>
+      </section>
+
+      <section id="research">
+        <h2 id="research-title">Research Interests</h2>
+        <ul>
+          <li id="r1">Database Systems</li>
+          <li id="r2">LLM4DB: Large Language Models for Databases</li>
+          <li id="r3">Quality Assurance for Foundational Software</li>
+        </ul>
+      </section>
+
+      <section id="publications">
+        <h2 id="publications-title">Publications</h2>
+
+        <div class="pub-section">
+          <h3 id="first-author-title">First-Author Papers</h3>
+          <ol>
+            <li>
+              <strong id="pub1-author">Xudong Xie</strong>, Yuwei Zhang, Wensheng Dou, Yu Gao, Ziyu Cui, Jiansen Song, Rui Yang, Jun Wei. (2026). 
+              <span id="pub1-title">RISE: Rule-Driven SQL Dialect Translation via Query Reduction</span>. 
+              <em>ICSE 2026</em> (Major Revision).
+            </li>
+          </ol>
         </div>
-      </div>
-    </section>
 
-    <section class="section">
-      <h2>📬 联系我</h2>
-      <div class="contact-links">
-        <a href="mailto:your.email@example.com">📧 邮箱</a>
-        <a href="https://github.com/your-username" target="_blank">🐙 GitHub</a>
-        <a href="https://linkedin.com/in/your-profile" target="_blank">💼 LinkedIn</a>
-        <a href="https://twitter.com/your-handle" target="_blank">🐦 Twitter</a>
-      </div>
-    </section>
+        <div class="pub-section">
+          <h3 id="co-author-title">Collaborative Papers</h3>
+          <ol>
+            <li>
+              Rui Yang, Ziyu Cui, Wensheng Dou, Yu Gao, Jiansen Song, <strong id="pub2-author">Xudong Xie</strong>, Jun Wei (2025). 
+              <span id="pub2-title">Detecting Isolation Anomalies in Relational DBMSs</span>. 
+              <em>ISSTA 2025</em>.
+            </li>
+          </ol>
+        </div>
+      </section>
 
-    <footer>
-      <p>© 2025 张三 | 用 ❤️ 和代码构建</p>
-    </footer>
+      <section id="projects">
+        <h2 id="projects-title">Projects</h2>
+        <div class="project-title" id="p1-title">DBMSForge: Automated DBMS Testing Framework</div>
+        <p id="p1-desc">Developing and maintaining an advanced testing framework for database management systems, supporting multiple correctness testing approaches for SQL engines and transaction engines. Planned for open-source release.</p>
+
+        <div class="project-title" id="p2-title">SQL Dialect Translation Tool (Huawei openGauss Summer of Code 2024)</div>
+        <p id="p2-desc">Implemented a rule-driven, query-reduction-based approach for high-precision automatic translation across SQL dialects (e.g., Oracle → openGauss), enabling heterogeneous database migration.</p>
+
+        <div class="project-title" id="p3-title">openGauss-Kotaemon Intelligent Assistant (Huawei openGauss Summer of Code 2025)</div>
+        <p id="p3-desc">Integrate openGauss with the AI orchestration framework Kotaemon to build a natural language interactive intelligent assistant powered by the openGauss vector database, enhancing development and operational efficiency.</p>
+      </section>
+
+      <section id="skills">
+        <h2 id="skills-title">Technical Skills</h2>
+        <p id="skills-list">Python, Java, C++, SQL, Database Systems, Program Analysis, Fuzzing, LLM Applications</p>
+      </section>
+
+      <footer>
+        <p id="footer-text">© 2025 Xie Xudong. Copy right reserved.</p>
+      </footer>
+    </div>
   </div>
 
-  <script>
-    // 主题切换
-    const toggle = document.getElementById('themeToggle');
-    const body = document.body;
+  <!-- Reading Progress Bar -->
+  <div id="progressBar" class="progress-bar"></div>
 
-    // 检查本地存储的主题偏好
-    if (localStorage.getItem('theme') === 'dark') {
-      body.classList.add('dark');
-      toggle.textContent = '☀️';
+  <!-- Back to Top Button -->
+  <button id="backToTop" class="back-to-top" aria-label="Back to top">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
+    </svg>
+  </button>
+
+  <script>
+    const translations = {
+      en: {
+        name: "Xie Xudong",
+        title: 'Ph.D. Student (2023), <a href="http://www.tcse.cn/" target="_blank" rel="noopener">Technology Center of Software Engineering</a>, Institute of Software, Chinese Academy of Sciences',
+        email: "xiexudong23@otcaix.iscas.ac.cn",
+        "about-title": "About Me",
+        "about-text": 'I am a Ph.D. student at the Technology Center of Software Engineering, Institute of Software, Chinese Academy of Sciences, advised by <a href="https://wsdou.github.io" target="_blank" rel="noopener">Prof. Wensheng Dou</a>. My research lies at the intersection of database systems and large language models, with a focus on intelligent database systems (LLM4DB) and quality assurance for foundational software.',
+        "education-title": "Education",
+        "edu-phd": "Institute of Software, Chinese Academy of Sciences — Ph.D. in Software Engineering (2023–Present)",
+        "edu-bachelor": "College of Intelligence and Computing, Tianjin University — B.E. in Software Engineering (2019–2023)",
+        "research-title": "Research Interests",
+        "r1": "Database Systems",
+        "r2": "LLM4DB: Large Language Models for Databases",
+        "r3": "Quality Assurance for Foundational Software",
+        "projects-title": "Projects",
+        "p1-title": "DBMSForge: Automated DBMS Testing Framework",
+        "p1-desc": "Developing and maintaining an advanced testing framework for database management systems, supporting multiple correctness testing approaches for SQL engines and transaction engines. Planned for open-source release.",
+        "p2-title": "SQL Dialect Translation Tool (Huawei openGauss Summer of Code 2024)",
+        "p2-desc": "Implemented a rule-driven, query-reduction-based approach for high-precision automatic translation across SQL dialects (e.g., Oracle → openGauss), enabling heterogeneous database migration.",
+        "p3-title": "openGauss-Kotaemon Intelligent Assistant (Huawei openGauss Summer of Code 2025)",
+        "p3-desc": "Integrate openGauss with the AI orchestration framework Kotaemon to build a natural language interactive intelligent assistant powered by the openGauss vector database, enhancing development and operational efficiency.",
+        "publications-title": "Publications",
+        "first-author-title": "First-Author Papers",
+        "co-author-title": "Collaborative Papers",
+        "pub1-author": "Xudong Xie",
+        "pub1-title": "RISE: Rule-Driven SQL Dialect Translation via Query Reduction",
+        "pub2-author": "Xudong Xie",
+        "pub2-title": "Detecting Isolation Anomalies in Relational DBMSs",
+        "skills-title": "Technical Skills",
+        "skills-list": "Python, Java, C++, SQL, Database Systems, Databasee Testing, LLM Applications",
+        "footer-text": "© 2025 Xie Xudong. Copy right reserved.",
+        "github": "GitHub",
+        "scholar": "Google Scholar",
+        "lang-toggle": "中文",
+        "nav-about": "About Me",
+        "nav-education": "Education",
+        "nav-research": "Research",
+        "nav-projects": "Projects",
+        "nav-publications": "Publications",
+        "nav-skills": "Skills"
+      },
+      zh: {
+        name: "谢旭东",
+        title: '中国科学院软件研究所 <a href="http://www.tcse.cn/" target="_blank" rel="noopener">软件工程技术研究开发中心</a> 2023级博士研究生',
+        email: "xiexudong23@otcaix.iscas.ac.cn",
+        "about-title": "关于我",
+        "about-text": '我是中国科学院软件研究所软件工程技术研究开发中心的博士研究生，导师为<a href="https://wsdou.github.io" target="_blank" rel="noopener">窦文生老师</a>。我的研究聚焦于数据库系统与大语言模型的交叉方向，特别是智能数据库系统（LLM4DB）与基础软件的质量保障技术。',
+        "education-title": "教育背景",
+        "edu-phd": "中国科学院软件研究所 — 软件工程 博士（2023–至今）",
+        "edu-bachelor": "天津大学智能与计算学部 — 软件工程 本科（2019–2023）",
+        "research-title": "研究方向",
+        "r1": "数据库系统",
+        "r2": "LLM4DB：大语言模型驱动的数据库智能",
+        "r3": "基础软件质量保障",
+        "projects-title": "项目经历",
+        "p1-title": "DBMSForge：数据库自动化测试工具",
+        "p1-desc": "开发并维护一个先进的数据库管理系统测试框架，支持多种 SQL 引擎与事务引擎的正确性测试方法，计划未来开源。",
+        "p2-title": "SQL 方言转译工具（华为 openGauss 2024 开源之夏）",
+        "p2-desc": "基于规则驱动的查询规约方法，实现跨 SQL 方言（如 Oracle → openGauss）的高精度自动翻译，支撑异构数据库迁移。",
+        "p3-title": "openGauss对接AI编排工具Kotaemon实现智能小助手（华为 openGauss 2025 开源之夏）",
+        "p3-desc": "集成 openGauss 与 AI 编排框架 Kotaemon，构建基于openGauss向量数据库的自然语言交互式智能助手，提升开发与运维效率。",
+        "publications-title": "发表论文",
+        "first-author-title": "一作论文",
+        "co-author-title": "参与论文",
+        "pub1-author": "Xudong Xie",
+        "pub1-title": "RISE: Rule-Driven SQL Dialect Translation via Query Reduction",
+        "pub2-author": "Xudong Xie",
+        "pub2-title": "Detecting Isolation Anomalies in Relational DBMSs",
+        "skills-title": "技术栈",
+        "skills-list": "Python, Java, C++, SQL, 数据库系统, 数据库测试, 大语言模型应用",
+        "footer-text": "© 2025 谢旭东。版权所有。",
+        "github": "GitHub",
+        "scholar": "谷歌学术",
+        "lang-toggle": "English",
+        "nav-about": "关于我",
+        "nav-education": "教育背景",
+        "nav-research": "研究方向",
+        "nav-projects": "项目经历",
+        "nav-publications": "发表论文",
+        "nav-skills": "技术栈"
+      }
+    };
+
+    let currentLang = 'en';
+    const langToggle = document.getElementById('langToggle');
+
+    function switchLanguage(lang) {
+      currentLang = lang;
+      const trans = translations[lang];
+      for (const key in trans) {
+        const el = document.getElementById(key);
+        if (el) {
+          if (key === 'title' || key === 'about-text') {
+            el.innerHTML = trans[key];
+          } else if (key === 'pub1-author') {
+            // Special handling for first author - keep full author list but translate the name
+            const fullAuthorList = el.parentElement.innerHTML;
+            if (lang === 'zh') {
+              const updatedList = fullAuthorList.replace('<strong id="pub1-author">Xudong Xie</strong>', '<strong id="pub1-author">谢旭东</strong>');
+              el.parentElement.innerHTML = updatedList;
+            } else {
+              const updatedList = fullAuthorList.replace('<strong id="pub1-author">谢旭东</strong>', '<strong id="pub1-author">Xudong Xie</strong>');
+              el.parentElement.innerHTML = updatedList;
+            }
+          } else if (key === 'pub2-author') {
+            // Special handling for second author - keep full author list but translate the name
+            const fullAuthorList = el.parentElement.innerHTML;
+            if (lang === 'zh') {
+              const updatedList = fullAuthorList.replace('<strong id="pub2-author">Xudong Xie</strong>', '<strong id="pub2-author">谢旭东</strong>');
+              el.parentElement.innerHTML = updatedList;
+            } else {
+              const updatedList = fullAuthorList.replace('<strong id="pub2-author">谢旭东</strong>', '<strong id="pub2-author">Xudong Xie</strong>');
+              el.parentElement.innerHTML = updatedList;
+            }
+          } else {
+            el.textContent = trans[key];
+          }
+        }
+      }
+      langToggle.textContent = translations[lang === 'en' ? 'zh' : 'en']['lang-toggle'];
+      document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
     }
 
-    toggle.addEventListener('click', () => {
-      body.classList.toggle('dark');
-      if (body.classList.contains('dark')) {
-        localStorage.setItem('theme', 'dark');
-        toggle.textContent = '☀️';
+    langToggle.addEventListener('click', () => {
+      switchLanguage(currentLang === 'en' ? 'zh' : 'en');
+    });
+
+    // 滚动高亮当前导航项
+    function highlightNavOnScroll() {
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.sidebar a');
+      let currentId = '';
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 120; // offset for header + padding
+        const sectionHeight = section.offsetHeight;
+        if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+          currentId = section.id;
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${currentId}`) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', highlightNavOnScroll);
+    // 初始化高亮
+    window.addEventListener('load', highlightNavOnScroll);
+
+    // Progress Bar and Back to Top Button
+    const backToTopButton = document.getElementById('backToTop');
+    const progressBar = document.getElementById('progressBar');
+    
+    function updateScrollProgress() {
+      const winHeight = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight - winHeight;
+      const scrollTop = window.scrollY;
+      const scrollPercent = (scrollTop / docHeight) * 100;
+      
+      progressBar.style.width = scrollPercent + '%';
+      
+      // Toggle back to top button
+      if (scrollTop > 300) {
+        backToTopButton.classList.add('visible');
       } else {
-        localStorage.setItem('theme', 'light');
-        toggle.textContent = '🌙';
+        backToTopButton.classList.remove('visible');
       }
+    }
+
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+
+    backToTopButton.addEventListener('click', scrollToTop);
+
+    // Enhanced scroll highlighting with smooth transitions
+    function enhancedHighlightNavOnScroll() {
+      highlightNavOnScroll();
+      updateScrollProgress();
+    }
+
+    window.addEventListener('scroll', enhancedHighlightNavOnScroll);
+
+    // Add smooth hover effects for all interactive elements
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add ripple effect to buttons
+      const buttons = document.querySelectorAll('button, .sidebar nav a');
+      buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          const ripple = document.createElement('span');
+          ripple.classList.add('ripple');
+          this.appendChild(ripple);
+          
+          setTimeout(() => {
+            ripple.remove();
+          }, 600);
+        });
+      });
     });
   </script>
 </body>
