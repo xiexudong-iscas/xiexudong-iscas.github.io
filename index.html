@@ -606,28 +606,12 @@
       for (const key in trans) {
         const el = document.getElementById(key);
         if (el) {
+          if (key === 'pub1-author' || key === 'pub2-author') {
+            continue;
+          }
+          
           if (key === 'title' || key === 'about-text') {
             el.innerHTML = trans[key];
-          } else if (key === 'pub1-author') {
-            // Special handling for first author - keep full author list but translate the name
-            const fullAuthorList = el.parentElement.innerHTML;
-            if (lang === 'zh') {
-              const updatedList = fullAuthorList.replace('<strong id="pub1-author">Xudong Xie</strong>', '<strong id="pub1-author">谢旭东</strong>');
-              el.parentElement.innerHTML = updatedList;
-            } else {
-              const updatedList = fullAuthorList.replace('<strong id="pub1-author">谢旭东</strong>', '<strong id="pub1-author">Xudong Xie</strong>');
-              el.parentElement.innerHTML = updatedList;
-            }
-          } else if (key === 'pub2-author') {
-            // Special handling for second author - keep full author list but translate the name
-            const fullAuthorList = el.parentElement.innerHTML;
-            if (lang === 'zh') {
-              const updatedList = fullAuthorList.replace('<strong id="pub2-author">Xudong Xie</strong>', '<strong id="pub2-author">谢旭东</strong>');
-              el.parentElement.innerHTML = updatedList;
-            } else {
-              const updatedList = fullAuthorList.replace('<strong id="pub2-author">谢旭东</strong>', '<strong id="pub2-author">Xudong Xie</strong>');
-              el.parentElement.innerHTML = updatedList;
-            }
           } else {
             el.textContent = trans[key];
           }
