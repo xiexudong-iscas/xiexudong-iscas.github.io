@@ -506,7 +506,7 @@
       </section>
 
       <footer>
-        <p id="footer-text">© 2025 Xie Xudong <span class="heart-icon" id="heartIcon">❤️</span>. Copy right reserved.</p>
+        <p id="footer-text">© 2025 Xie Xudong <span class="heart-icon" id="heartIcon">❤️</span>. All rights reserved.</p>
       </footer>
     </div>
   </div>
@@ -544,7 +544,7 @@
         "pub2-title": "Detecting Isolation Anomalies in Relational DBMSs",
         "skills-title": "Technical Skills",
         "skills-list": "Python, Java, C++, SQL, Database Systems, Databasee Testing, LLM Applications",
-        "footer-text": "© 2025 Xie Xudong. Copy right reserved.",
+        "footer-text": "© 2025 Xie Xudong <span class=\"heart-icon\" id=\"heartIcon\">❤️</span>. All rights reserved.",
         "github": "GitHub",
         "scholar": "Google Scholar",
         "lang-toggle": "Chinese",
@@ -584,7 +584,7 @@
         "pub2-title": "Detecting Isolation Anomalies in Relational DBMSs",
         "skills-title": "技术栈",
         "skills-list": "Python, Java, C++, SQL, 数据库系统, 数据库测试, 大语言模型应用",
-        "footer-text": "© 2025 谢旭东 ❤️。版权所有。",
+        "footer-text": "© 2025 谢旭东 <span class=\"heart-icon\" id=\"heartIcon\">❤️</span>。版权所有。",
         "github": "GitHub",
         "scholar": "谷歌学术",
         "lang-toggle": "英文",
@@ -606,12 +606,21 @@
       for (const key in trans) {
         const el = document.getElementById(key);
         if (el) {
+          // Skip author names - they should always remain in English
           if (key === 'pub1-author' || key === 'pub2-author') {
             continue;
           }
           
-          if (key === 'title' || key === 'about-text') {
+          // Use innerHTML for elements that contain HTML tags
+          if (key === 'title' || key === 'about-text' || key === 'footer-text') {
             el.innerHTML = trans[key];
+            // Re-attach event listener for heart icon after DOM update
+            if (key === 'footer-text') {
+              const newHeartIcon = document.getElementById('heartIcon');
+              if (newHeartIcon) {
+                newHeartIcon.addEventListener('click', createHeartAnimation);
+              }
+            }
           } else {
             el.textContent = trans[key];
           }
@@ -650,9 +659,8 @@
     window.addEventListener('scroll', highlightNavOnScroll);
     window.addEventListener('load', highlightNavOnScroll);
 
-    // Heart click animation
-    const heartIcon = document.getElementById('heartIcon');
-    heartIcon.addEventListener('click', () => {
+    // Heart click animation function
+    function createHeartAnimation() {
       const container = document.createElement('div');
       container.className = 'heart-container';
       
@@ -710,7 +718,13 @@
       setTimeout(() => {
         container.remove();
       }, 5200);
-    });
+    }
+
+    // Initialize heart icon event listener
+    const heartIcon = document.getElementById('heartIcon');
+    if (heartIcon) {
+      heartIcon.addEventListener('click', createHeartAnimation);
+    }
   </script>
 </body>
 
