@@ -308,6 +308,102 @@
       .lang-toggle { display: none; }
       .container { flex-direction: column; }
     }
+
+    /* Heart animation - 李峑风格 */
+    .heart-icon {
+      cursor: pointer;
+      display: inline-block;
+      transition: transform 0.1s ease;
+    }
+
+    .heart-icon:hover {
+      transform: scale(1.2);
+    }
+
+    .heart-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 9999;
+      animation: fadeInOut 5s ease-in-out forwards;
+    }
+
+    .heart-particle {
+      position: absolute;
+      color: #ff1493;
+      font-size: 4px;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      text-shadow: 0 0 3px rgba(255, 20, 147, 0.8);
+      animation: twinkle 1.5s ease-in-out infinite;
+    }
+
+    .heart-center-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 20px rgba(255, 20, 147, 0.6);
+      z-index: 10;
+    }
+
+    @keyframes fadeInOut {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+      }
+      10% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      90% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+    }
+
+    @keyframes twinkle {
+      0% {
+        opacity: 0.3;
+        text-shadow: 0 0 3px rgba(255, 20, 147, 0.5);
+      }
+      50% {
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(255, 20, 147, 1), 0 0 20px rgba(255, 105, 180, 0.8);
+      }
+      100% {
+        opacity: 0.3;
+        text-shadow: 0 0 3px rgba(255, 20, 147, 0.5);
+      }
+    }
+
+    @keyframes drift {
+      0% {
+        transform: translate(0, 0);
+      }
+      25% {
+        transform: translate(calc(var(--drift-x) * 0.5), calc(var(--drift-y) * 0.3));
+      }
+      50% {
+        transform: translate(var(--drift-x), var(--drift-y));
+      }
+      75% {
+        transform: translate(calc(var(--drift-x) * 0.3), calc(var(--drift-y) * 0.7));
+      }
+      100% {
+        transform: translate(0, 0);
+      }
+    }
   </style>
 </head>
 <body>
@@ -410,7 +506,7 @@
       </section>
 
       <footer>
-        <p id="footer-text">© 2025 Xie Xudong. Copy right reserved.</p>
+        <p id="footer-text">© 2025 Xie Xudong <span class="heart-icon" id="heartIcon">❤️</span>. Copy right reserved.</p>
       </footer>
     </div>
   </div>
@@ -488,7 +584,7 @@
         "pub2-title": "Detecting Isolation Anomalies in Relational DBMSs",
         "skills-title": "技术栈",
         "skills-list": "Python, Java, C++, SQL, 数据库系统, 数据库测试, 大语言模型应用",
-        "footer-text": "© 2025 谢旭东。版权所有。",
+        "footer-text": "© 2025 谢旭东 ❤️。版权所有。",
         "github": "GitHub",
         "scholar": "谷歌学术",
         "lang-toggle": "英文",
@@ -569,6 +665,68 @@
 
     window.addEventListener('scroll', highlightNavOnScroll);
     window.addEventListener('load', highlightNavOnScroll);
+
+    // Heart click animation
+    const heartIcon = document.getElementById('heartIcon');
+    heartIcon.addEventListener('click', () => {
+      const container = document.createElement('div');
+      container.className = 'heart-container';
+      
+      // 心形参数方程: x = 16sin^3(t), y = 13cos(t) - 5cos(2t) - 2cos(3t) - cos(4t)
+      const layers = 30; // 层数
+      const pointsPerLayer = 250; // 每层点数
+      
+      // 添加中心图片
+      const centerImage = document.createElement('img');
+      centerImage.src = './615.jpg';
+      centerImage.className = 'heart-center-image';
+      centerImage.alt = '615';
+      container.appendChild(centerImage);
+      
+      for (let layer = 0; layer < layers; layer++) {
+        const scale = 1 - (layer / layers); // 从外到内
+        const pointsInLayer = pointsPerLayer;
+        
+        for (let i = 0; i < pointsInLayer; i++) {
+          const t = (i / pointsInLayer) * 2 * Math.PI;
+          
+          // 心形方程
+          const x = scale * 16 * Math.pow(Math.sin(t), 3);
+          const y = scale * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+          
+          const particle = document.createElement('span');
+          particle.className = 'heart-particle';
+          particle.textContent = '615';
+          
+          // 添加随机微小偏移，使分布更自然
+          const offsetX = (Math.random() - 0.5) * 3;
+          const offsetY = (Math.random() - 0.5) * 3;
+          
+          particle.style.left = (x * 12 + offsetX) + 'px';
+          particle.style.top = (-y * 12 + offsetY) + 'px';
+          particle.style.animationDelay = (Math.random() * 1.5) + 's';
+          
+          // 40%的粒子添加漂移效果，增强运动感
+          if (Math.random() > 0.6) {
+            const driftSpeed = 2 + Math.random() * 2; // 2-4秒随机速度
+            particle.style.animation += `, drift ${driftSpeed}s ease-in-out infinite`;
+            const driftAngle = Math.random() * Math.PI * 2;
+            const driftDist = 10 + Math.random() * 15; // 增大漂移距离
+            particle.style.setProperty('--drift-x', Math.cos(driftAngle) * driftDist + 'px');
+            particle.style.setProperty('--drift-y', Math.sin(driftAngle) * driftDist + 'px');
+          }
+          
+          container.appendChild(particle);
+        }
+      }
+      
+      document.body.appendChild(container);
+      
+      // 5.2秒后移除
+      setTimeout(() => {
+        container.remove();
+      }, 5200);
+    });
   </script>
 </body>
 
